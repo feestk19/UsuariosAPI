@@ -1,4 +1,26 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using UsuariosAPI.Data;
+using UsuariosAPI.Model;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Adiciona um contexto de comunicação com o BD
+
+var connString = builder.Configuration.GetConnectionString("UsuarioConnection");
+
+builder.Services.AddDbContext<UsuarioDbContext>
+    (opts =>
+    {
+        opts.UseMySql(connString, ServerVersion.AutoDetect(connString));
+    });
+
+//
+builder.Services
+    .AddIdentity<Usuario, IdentityRole>()
+    .AddEntityFrameworkStores<UsuarioDbContext>()
+    .AddDefaultTokenProviders();
 
 // Add services to the container.
 
