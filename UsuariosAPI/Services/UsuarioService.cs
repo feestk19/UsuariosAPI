@@ -7,15 +7,17 @@ namespace UsuariosAPI.Services
 {
     //Podemos enfrentar problemas caso toda a nossa lógica esteja inserida diretamente em nosso controlador.
     //Quando aumentarmos o código, as responsabilidades vão se misturar. Uma alternativa para contornar tal problema é criar classes contendo cada lógica específica.
-    public class CadastroService
+    public class UsuarioService
     {
         private IMapper _mapper;
         private UserManager<Usuario> _usermanager;
+        private SignInManager<Usuario> _signInManager;
 
-        public CadastroService(UserManager<Usuario> usermanager, IMapper mapper)
+        public UsuarioService(UserManager<Usuario> usermanager, IMapper mapper, SignInManager<Usuario> signInManager)
         {
             _usermanager = usermanager;
             _mapper = mapper;
+            _signInManager = signInManager;
         }
 
         public async Task Cadastra(CreateUsuarioDto dto)
@@ -35,7 +37,14 @@ namespace UsuariosAPI.Services
             }
         }
 
+        public async Task Login(LoginUsuarioDto dto)
+        {
+            var resultado = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
 
-
+            if (!resultado.Succeeded)
+            {
+                throw new ApplicationException("Usuário não autenticado!");
+            }
+        }
     }
 }
