@@ -16,7 +16,8 @@ namespace UsuariosAPI.Services
             {
                 new Claim("username", usuario.UserName),
                 new Claim("id", usuario.Id),
-                new Claim(ClaimTypes.DateOfBirth, usuario.DataNascimento.ToString())
+                new Claim(ClaimTypes.DateOfBirth, usuario.DataNascimento.ToString()),
+                new Claim("loginTimestamp", DateTime.UtcNow.ToString())
             };
 
             //Gera chave para ser usada no signinCredentials
